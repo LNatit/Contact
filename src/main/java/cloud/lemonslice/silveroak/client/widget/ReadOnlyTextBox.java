@@ -2,12 +2,12 @@ package cloud.lemonslice.silveroak.client.widget;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
@@ -106,12 +106,12 @@ public class ReadOnlyTextBox extends AbstractWidget
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTicks)
     {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         for (EditableTextBox.Line line : currentPage.lines)
         {
-            this.font.draw(poseStack, line.lineTextComponent, (float) line.x, (float) line.y, color);
+            gui.drawString(this.font, line.lineTextComponent, line.x, line.y, color);
         }
     }
 

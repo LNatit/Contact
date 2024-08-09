@@ -3,6 +3,7 @@ package cloud.lemonslice.contact.client.gui;
 import cloud.lemonslice.contact.common.item.ItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
@@ -15,25 +16,29 @@ import java.util.List;
 public class NewMailToast implements Toast
 {
     @Override
-    public Visibility render(PoseStack matrixStack, ToastComponent gui, long ticks)
+    public Visibility render(GuiGraphics guiGraphics, ToastComponent toastComponent, long ticks)
     {
+        PoseStack matrixStack = guiGraphics.pose();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        gui.blit(matrixStack, 0, 0, 0, 0, this.width(), this.height());
+        toastComponent.blit(matrixStack, 0, 0, 0, 0, this.width(), this.height());
 
-        List<FormattedCharSequence> list = gui.getMinecraft().font.split(Component.translatable("info.contact.new_mail.desc"), 125);
+        List<FormattedCharSequence> list = toastComponent.getMinecraft().font.split(Component.translatable("info.contact.new_mail.desc"), 125);
         int i = 16776960;
         if (list.size() == 1)
         {
-            gui.getMinecraft().font.draw(matrixStack, Component.translatable("info.contact.new_mail.title"), 30.0F, 7.0F, i | -16777216);
-            gui.getMinecraft().font.draw(matrixStack, list.get(0), 30.0F, 18.0F, -1);
+            guiGraphics.drawString(toastComponent.getMinecraft().font, Component.translatable("info.contact.new_mail.title").getVisualOrderText(), 30.0F, 7.0F, i | -16777216, true);
+//            toastComponent.getMinecraft().font.draw(matrixStack, Component.translatable("info.contact.new_mail.title"), 30.0F, 7.0F, i | -16777216);
+            guiGraphics.drawString(toastComponent.getMinecraft().font, list.get(0), 30.0F, 18.0F, -1, true);
+//            toastComponent.getMinecraft().font.draw(matrixStack, list.get(0), 30.0F, 18.0F, -1);
         }
         else
         {
             if (ticks < 1500L)
             {
                 int k = Mth.floor(Mth.clamp((float) (1500L - ticks) / 300.0F, 0.0F, 1.0F) * 255.0F) << 24 | 67108864;
-                gui.getMinecraft().font.draw(matrixStack, Component.translatable("info.contact.new_mail.desc"), 30.0F, 11.0F, i | k);
+                guiGraphics.drawString(toastComponent.getMinecraft().font, Component.translatable("info.contact.new_mail.desc").getVisualOrderText(), 30.0F, 11.0F, i | k, true);
+//                toastComponent.getMinecraft().font.draw(matrixStack, Component.translatable("info.contact.new_mail.desc"), 30.0F, 11.0F, i | k);
             }
             else
             {
@@ -42,13 +47,14 @@ public class NewMailToast implements Toast
 
                 for (FormattedCharSequence formattedCharSequence : list)
                 {
-                    gui.getMinecraft().font.draw(matrixStack, formattedCharSequence, 30.0F, (float) l, 16777215 | i1);
+                    guiGraphics.drawString(toastComponent.getMinecraft().font, formattedCharSequence, 30.0F, (float) l, 16777215 | i1, true);
+//                    toastComponent.getMinecraft().font.draw(matrixStack, formattedCharSequence, 30.0F, (float) l, 16777215 | i1);
                     l += 9;
                 }
             }
         }
 
-        gui.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(new ItemStack(ItemRegistry.MAIL.get()), 8, 8);
+        toastComponent.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(new ItemStack(ItemRegistry.MAIL.get()), 8, 8);
         return ticks >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 }

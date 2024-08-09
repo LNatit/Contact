@@ -2,7 +2,7 @@ package cloud.lemonslice.silveroak.common.item;
 
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,9 +21,9 @@ public final class SilveroakItemsRegistry
     public static final RegistryObject<Item> HYGROMETER = ITEM_REGISTER.register("hygrometer", HygrometerItem::new);
 
     @SubscribeEvent
-    public static void registerCreativeModeTabContents(CreativeModeTabEvent.BuildContents event)
+    public static void registerCreativeModeTabContents(BuildCreativeModeTabContentsEvent event)
     {
-        if (event.getTab().equals(CreativeModeTabs.TOOLS_AND_UTILITIES))
+        if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES))
         {
             ITEM_REGISTER.getEntries().forEach(event::accept);
         }

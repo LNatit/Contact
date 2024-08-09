@@ -6,11 +6,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import static java.lang.Math.PI;
@@ -35,7 +35,7 @@ public class MailboxTileEntityRenderer implements BlockEntityRenderer<MailboxBlo
             matrixStackIn.scale(0.6F, 0.6F, 0.6F);
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(-mc.player.yHeadRot));
 
-            renderItem.renderStatic(mail, ItemTransforms.TransformType.FIXED, 15728880, combinedOverlayIn, matrixStackIn, bufferIn, 0);
+            renderItem.renderStatic(mail, ItemDisplayContext.FIXED, 15728880, combinedOverlayIn, matrixStackIn, bufferIn, tileEntityIn.getLevel(), 0);
 
             matrixStackIn.popPose();
         }

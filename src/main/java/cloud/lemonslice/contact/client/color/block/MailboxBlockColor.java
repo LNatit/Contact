@@ -23,11 +23,11 @@ public class MailboxBlockColor implements BlockColor
         {
             if (tintIndex <= 1)
             {
-                return ((MailboxBlock) block).boxColor.getMaterialColor().col;
+                return ((MailboxBlock) block).boxColor.getMapColor().col;
             }
             else if (tintIndex == 2)
             {
-                return DyeColor.RED.getMaterialColor().col;
+                return DyeColor.RED.getMapColor().col;
             }
         }
         return -1;

@@ -1,6 +1,7 @@
 package cloud.lemonslice.silveroak.common.item;
 
 import cloud.lemonslice.silveroak.client.ClientEnvironmentDataHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,7 +24,7 @@ public class RainGaugeItem extends NormalItem
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced)
     {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        if (pLevel != null && pLevel.isClientSide)
+        if (pLevel != null && pLevel.isClientSide && Minecraft.getInstance().player.getInventory().contains(new ItemStack(this)))
         {
             pTooltipComponents.add(ClientEnvironmentDataHandler.getRainfallInfo());
         }

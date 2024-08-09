@@ -55,7 +55,7 @@ public enum Rainfall
 
     public static Rainfall getRainfallLevel(Biome biome)
     {
-        return getRainfallLevel(biome.getDownfall());
+        return getRainfallLevel(biome.getModifiedClimateSettings().downfall());
     }
 
     public static Rainfall getRainfallLevel(float rainfall)

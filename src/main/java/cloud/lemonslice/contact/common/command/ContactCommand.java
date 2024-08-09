@@ -263,7 +263,7 @@ public class ContactCommand
                 }
                 else
                 {
-                    source.sendSuccess(Component.translatable("command.contact.deliver.full", target), true);
+                    source.sendSuccess(() -> Component.translatable("command.contact.deliver.full", target), true);
                 }
             }
         });
@@ -290,11 +290,11 @@ public class ContactCommand
 
         if (n.get() == 1 && target.equals("@e"))
         {
-            source.sendSuccess(Component.translatable("command.contact.deliver.success.single", new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), target), true);
+            source.sendSuccess(() -> Component.translatable("command.contact.deliver.success.single", new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), target), true);
         }
         else
         {
-            source.sendSuccess(Component.translatable("command.contact.deliver.success.multiple", new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), n.get()), true);
+            source.sendSuccess(() -> Component.translatable("command.contact.deliver.success.multiple", new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), n.get()), true);
         }
         return n.get();
     }
@@ -312,11 +312,11 @@ public class ContactCommand
 
         if (targets.size() == 1)
         {
-            source.sendSuccess(Component.translatable("commands.give.success.single", 1, new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), targets.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", 1, new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), targets.iterator().next().getDisplayName()), true);
         }
         else
         {
-            source.sendSuccess(Component.translatable("commands.give.success.single", 1, new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), targets.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", 1, new ItemStack(isEnder ? ItemRegistry.ENDER_PARCEL.get() : ItemRegistry.PARCEL.get()).getDisplayName(), targets.size()), true);
         }
 
         return targets.size();
@@ -343,11 +343,11 @@ public class ContactCommand
 
         if (n.get() == 1 && !target.equals("@e"))
         {
-            source.sendSuccess(Component.translatable("command.contact.deliver.success.single", new ItemStack(isEnder ? ItemRegistry.ENDER_POSTCARD.get() : ItemRegistry.POSTCARD.get()).getDisplayName(), target), true);
+            source.sendSuccess(() -> Component.translatable("command.contact.deliver.success.single", new ItemStack(isEnder ? ItemRegistry.ENDER_POSTCARD.get() : ItemRegistry.POSTCARD.get()).getDisplayName(), target), true);
         }
         else
         {
-            source.sendSuccess(Component.translatable("command.contact.deliver.success.multiple", new ItemStack(isEnder ? ItemRegistry.ENDER_POSTCARD.get() : ItemRegistry.POSTCARD.get()).getDisplayName(), n.get()), true);
+            source.sendSuccess(() -> Component.translatable("command.contact.deliver.success.multiple", new ItemStack(isEnder ? ItemRegistry.ENDER_POSTCARD.get() : ItemRegistry.POSTCARD.get()).getDisplayName(), n.get()), true);
         }
         return n.get();
     }
@@ -369,11 +369,11 @@ public class ContactCommand
 
         if (targets.size() == 1)
         {
-            source.sendSuccess(Component.translatable("commands.give.success.single", 1, new ItemStack(ItemRegistry.POSTCARD.get()).getDisplayName(), targets.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", 1, new ItemStack(ItemRegistry.POSTCARD.get()).getDisplayName(), targets.iterator().next().getDisplayName()), true);
         }
         else
         {
-            source.sendSuccess(Component.translatable("commands.give.success.single", 1, new ItemStack(ItemRegistry.POSTCARD.get()).getDisplayName(), targets.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", 1, new ItemStack(ItemRegistry.POSTCARD.get()).getDisplayName(), targets.size()), true);
         }
 
         return targets.size();
@@ -392,7 +392,7 @@ public class ContactCommand
                     itemEntity.makeFakeItem();
                 }
 
-                serverplayer.level.playSound(null, serverplayer.getX(), serverplayer.getY(), serverplayer.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((serverplayer.getRandom().nextFloat() - serverplayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                serverplayer.level().playSound(null, serverplayer.getX(), serverplayer.getY(), serverplayer.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((serverplayer.getRandom().nextFloat() - serverplayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 serverplayer.inventoryMenu.broadcastChanges();
             }
             else
@@ -401,7 +401,7 @@ public class ContactCommand
                 if (itementity != null)
                 {
                     itementity.setNoPickUpDelay();
-                    itementity.setOwner(serverplayer.getUUID());
+                    itementity.setTarget(serverplayer.getUUID());
                 }
             }
         }

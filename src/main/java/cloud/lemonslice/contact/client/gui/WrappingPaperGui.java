@@ -8,7 +8,7 @@ import cloud.lemonslice.silveroak.client.widget.IconButton;
 import cloud.lemonslice.silveroak.helper.GuiHelper;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -41,11 +41,11 @@ public class WrappingPaperGui extends AbstractContainerScreen<WrappingPaperConta
         this.buttonPack = addWidget(new IconButton(offsetX + 124, offsetY + 15, 18, 19, Component.translatable("tooltip.contact.wrapping_paper.pack"), button -> pack(), this::buttonTooltip));
     }
 
-    private void buttonTooltip(Button button, PoseStack poseStack, int mouseX, int mouseY)
+    private void buttonTooltip(Button button, GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
         if (button.isHoveredOrFocused())
         {
-            GuiHelper.drawTooltip(this, poseStack, mouseX, mouseY, button.getX(), button.getY(), 18, 19, Lists.newArrayList(button.getMessage()));
+            GuiHelper.drawTooltip(guiGraphics, mouseX, mouseY, button.getX(), button.getY(), 18, 19, Lists.newArrayList(button.getMessage()));
         }
     }
 
@@ -55,29 +55,29 @@ public class WrappingPaperGui extends AbstractContainerScreen<WrappingPaperConta
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int x, int y)
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int x, int y)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        GuiHelper.drawLayer(poseStack, offsetX, offsetY, new TexturePos(0, 0, imageWidth, imageHeight));
+        GuiHelper.drawLayer(guiGraphics, offsetX, offsetY, TEXTURE, new TexturePos(0, 0, imageWidth, imageHeight));
 
-        GuiHelper.renderButton(poseStack, partialTicks, x, y, this.getBlitOffset(), TEXTURE, buttonPack,
+        GuiHelper.renderButton(guiGraphics, partialTicks, x, y, TEXTURE, buttonPack,
                 new TexturePos(imageWidth, 0, 18, 19),
                 new TexturePos(imageWidth, 19, 18, 19));
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY)
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
     }
 }

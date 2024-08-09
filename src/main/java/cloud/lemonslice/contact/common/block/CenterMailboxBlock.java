@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,7 +24,7 @@ public class CenterMailboxBlock extends NormalHorizontalBlock
 {
     public CenterMailboxBlock()
     {
-        super(BlockBehaviour.Properties.of(Material.METAL));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.METAL));
     }
 
     @Override
@@ -66,10 +66,11 @@ public class CenterMailboxBlock extends NormalHorizontalBlock
         return InteractionResult.SUCCESS;
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
-    {
-        return Lists.newArrayList(new ItemStack(this));
-    }
+    // TODO DataGen block drops
+//    @Override
+//    @SuppressWarnings("deprecation")
+//    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
+//    {
+//        return Lists.newArrayList(new ItemStack(this));
+//    }
 }

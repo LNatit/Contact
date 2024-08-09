@@ -7,7 +7,7 @@ import cloud.lemonslice.silveroak.helper.GuiHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ import static cloud.lemonslice.silveroak.SilveroakOutpost.MODID;
 import static cloud.lemonslice.silveroak.client.gui.hud.OverlayEventHandler.originThermometerBar;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = MODID)
-public class ThermometerBarOverlay extends GuiComponent implements IGuiOverlay
+public class ThermometerBarOverlay implements IGuiOverlay
 {
     private final static ResourceLocation OVERLAY_BAR = new ResourceLocation(MODID, "textures/gui/hud/env.png");
 
@@ -35,7 +35,8 @@ public class ThermometerBarOverlay extends GuiComponent implements IGuiOverlay
     private static float temp = 0;
     private static float level = 0;
 
-    public void render(ForgeGui gui, PoseStack poseStack, float partialTick, int screenWidth, int screenHeight)
+    @Override
+    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight)
     {
         LocalPlayer clientPlayer = Minecraft.getInstance().player;
         if (clientPlayer != null && originThermometerBar)
@@ -45,7 +46,7 @@ public class ThermometerBarOverlay extends GuiComponent implements IGuiOverlay
                 Item handed = clientPlayer.getMainHandItem().getItem();
                 if (handed.equals(SilveroakItemsRegistry.THERMOMETER.get()))
                 {
-                    Biome biome = clientPlayer.getLevel().getBiome(clientPlayer.blockPosition()).value();
+                    Biome biome = clientPlayer.level().getBiome(clientPlayer.blockPosition()).value();
                     float temp = biome.getHeightAdjustedTemperature(clientPlayer.blockPosition());
 
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -59,8 +60,8 @@ public class ThermometerBarOverlay extends GuiComponent implements IGuiOverlay
                     int offsetX = (screenWidth - WIDTH + 1) / 2, offsetY = (screenHeight + 36 - HEIGHT) / 2;
 
                     int width = getWidth(ThermometerBarOverlay.temp);
-                    GuiHelper.drawLayer(poseStack, offsetX + 1, offsetY + 1, new TexturePos(1, 10, width, HEIGHT - 2));
-                    GuiHelper.drawLayer(poseStack, offsetX, offsetY, new TexturePos(0, 14, WIDTH, HEIGHT));
+                    GuiHelper.drawLayer(guiGraphics, offsetX + 1, offsetY + 1, OVERLAY_BAR, new TexturePos(1, 10, width, HEIGHT - 2));
+                    GuiHelper.drawLayer(guiGraphics, offsetX, offsetY, OVERLAY_BAR, new TexturePos(0, 14, WIDTH, HEIGHT));
 
                     RenderSystem.disableBlend();
                 }

@@ -9,6 +9,7 @@ import cloud.lemonslice.silveroak.helper.GuiHelper;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -60,17 +61,17 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
         this.setInitialFocus(this.nameField);
     }
 
-    private void buttonTooltip(Button button, PoseStack poseStack, int mouseX, int mouseY)
+    private void buttonTooltip(Button button, GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
         if (button.isHoveredOrFocused())
         {
             if (menu.status == 2)
             {
-                GuiHelper.drawTooltip(this, poseStack, mouseX, mouseY, button.getX(), button.getY(), button.getWidth(), button.getHeight(), Lists.newArrayList(button.getMessage()));
+                GuiHelper.drawTooltip(guiGraphics, mouseX, mouseY, button.getX(), button.getY(), button.getWidth(), button.getHeight(), Lists.newArrayList(button.getMessage()));
             }
             else
             {
-                GuiHelper.drawTooltip(this, poseStack, mouseX, mouseY, button.getX(), button.getY(), button.getWidth(), button.getHeight(), Lists.newArrayList(Component.translatable("tooltip.contact.postbox.enquire")));
+                GuiHelper.drawTooltip(guiGraphics, mouseX, mouseY, button.getX(), button.getY(), button.getWidth(), button.getHeight(), Lists.newArrayList(Component.translatable("tooltip.contact.postbox.enquire")));
             }
         }
     }
@@ -101,7 +102,7 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
         {
             SimpleNetworkHandler.CHANNEL.sendToServer(new EnquireAddresseeMessage(menu.playerName, false));
         }
-        this.nameField.setFocus(false);
+        this.nameField.setFocused(false);
     }
 
     @Override
@@ -116,30 +117,30 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int x, int y)
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int x, int y)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         ResourceLocation texture = isRed ? RED_TEXTURE : GREEN_TEXTURE;
         RenderSystem.setShaderTexture(0, texture);
 
-        GuiHelper.drawLayer(poseStack, offsetX, offsetY, new TexturePos(0, 0, imageWidth, imageHeight));
+        GuiHelper.drawLayer(guiGraphics, offsetX, offsetY, texture, new TexturePos(0, 0, imageWidth, imageHeight));
 
-        GuiHelper.renderButton(poseStack, partialTicks, x, y, this.getBlitOffset(), texture, buttonSend,
+        GuiHelper.renderButton(guiGraphics, partialTicks, x, y, texture, buttonSend,
                 new TexturePos(imageWidth, 0, 10, 9),
                 new TexturePos(imageWidth, 9, 10, 9));
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY)
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
         this.font.draw(poseStack, Component.translatable("info.contact.postbox.addressee"), 40, 14, 0xE6E6E6);
         switch (menu.status)
@@ -147,7 +148,7 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
             case 0:
             {
                 MutableComponent text = Component.translatable("info.contact.postbox.need_mail");
-                renderTipsSentOrFull(poseStack, text);
+                renderTipsSentOrFull(guiGraphics.pose(), text);
                 return;
             }
             case 2:

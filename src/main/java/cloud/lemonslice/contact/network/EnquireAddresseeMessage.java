@@ -59,7 +59,7 @@ public class EnquireAddresseeMessage implements INormalMessage
         {
             if (nameIn.isEmpty())
             {
-                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(nameIn, -1), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(nameIn, -1), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                 return;
             }
             player.server.getLevel(Level.OVERWORLD).getCapability(WORLD_MAILBOX_DATA).ifPresent(data ->
@@ -78,14 +78,14 @@ public class EnquireAddresseeMessage implements INormalMessage
                             {
                                 data.getData().mailList.add(new MailToBeSent(uuid, parcel.copy(), 0));
                             }
-                            SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(lowerIn, -3), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                            SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(lowerIn, -3), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                             container.parcel.setStackInSlot(0, ItemStack.EMPTY);
                         }
                         return;
                     }
                     else
                     {
-                        SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(lowerIn, 0), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                        SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(lowerIn, 0), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                         return;
                     }
                 }
@@ -96,7 +96,7 @@ public class EnquireAddresseeMessage implements INormalMessage
                         UUID uuid = data.getData().nameToUUID.get(name);
                         if (data.getData().isMailboxFull(uuid))
                         {
-                            SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, -2), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                            SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, -2), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                             return;
                         }
                         GlobalPos mailboxPos = data.getData().getMailboxPos(uuid);
@@ -107,11 +107,11 @@ public class EnquireAddresseeMessage implements INormalMessage
                             {
                                 if (mailboxPos != null)
                                 {
-                                    ticks = MailboxManager.getDeliveryTicks(player.level.dimension(), player.blockPosition(), mailboxPos.dimension(), mailboxPos.pos());
+                                    ticks = MailboxManager.getDeliveryTicks(player.level().dimension(), player.blockPosition(), mailboxPos.dimension(), mailboxPos.pos());
                                 }
                                 else
                                 {
-                                    ticks = MailboxManager.getDeliveryTicks(player.level.dimension(), player.blockPosition(), Level.OVERWORLD, player.getLevel().getSharedSpawnPos());
+                                    ticks = MailboxManager.getDeliveryTicks(player.level().dimension(), player.blockPosition(), Level.OVERWORLD, player.level().getSharedSpawnPos());
                                 }
                             }
 
@@ -128,32 +128,32 @@ public class EnquireAddresseeMessage implements INormalMessage
 
                                 if (mailboxPos != null)
                                 {
-                                    if (mailboxPos.dimension() != player.level.dimension())
+                                    if (mailboxPos.dimension() != player.level().dimension())
                                     {
                                         parcel.getOrCreateTag().putBoolean("AnotherWorld", true);
                                     }
                                 }
                                 else
                                 {
-                                    if (Level.OVERWORLD != player.level.dimension())
+                                    if (Level.OVERWORLD != player.level().dimension())
                                     {
                                         parcel.getOrCreateTag().putBoolean("AnotherWorld", true);
                                     }
                                 }
 
                                 data.getData().mailList.add(new MailToBeSent(uuid, parcel, ticks));
-                                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, -3), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, -3), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                                 container.parcel.setStackInSlot(0, ItemStack.EMPTY);
                             }
                             else
                             {
-                                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, ticks), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(name, ticks), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                             }
                             return;
                         }
                     }
                 }
-                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(nameIn, -1), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                SimpleNetworkHandler.CHANNEL.sendTo(new AddresseeDataMessage(nameIn, -1), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
             });
         });
     }

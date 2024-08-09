@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -51,7 +51,7 @@ public class PostboxBlock extends NormalHorizontalBlock
 
     public PostboxBlock(boolean isRed)
     {
-        super(Properties.of(Material.STONE).noOcclusion().sound(SoundType.STONE).strength(1.5F, 6.0F));
+        super(Properties.of().mapColor(MapColor.STONE).noOcclusion().sound(SoundType.STONE).strength(1.5F, 6.0F));
         this.isRed = isRed;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HALF, DoubleBlockHalf.UPPER));
     }
@@ -146,12 +146,13 @@ public class PostboxBlock extends NormalHorizontalBlock
         }
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
-    {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? Lists.newArrayList(new ItemStack(this)) : Collections.emptyList();
-    }
+    // TODO DataGen block drops
+//    @Override
+//    @SuppressWarnings("deprecation")
+//    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
+//    {
+//        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? Lists.newArrayList(new ItemStack(this)) : Collections.emptyList();
+//    }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)

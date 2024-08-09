@@ -6,12 +6,12 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Transformation;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.text.DecimalFormat;
@@ -32,72 +31,58 @@ import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
 
 public final class GuiHelper
 {
-    public static void drawLayer(PoseStack poseStack, int x, int y, TexturePos pos, int z)
+    public static void drawLayer(GuiGraphics guiGraphics, int x, int y, ResourceLocation resourceLocation, TexturePos pos)
     {
-        ScreenUtils.drawTexturedModalRect(poseStack, x, y, pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), z);
+        guiGraphics.blit(resourceLocation, x, y, pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight());
     }
 
-    public static void drawLayer(PoseStack poseStack, int x, int y, TexturePos pos)
+    public static void drawLayerBySize(GuiGraphics guiGraphics, int x, int y, ResourceLocation resourceLocation, TexturePos pos, int textureWidth, int textureHeight)
     {
-        ScreenUtils.drawTexturedModalRect(poseStack, x, y, pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), 0);
+        guiGraphics.blit(resourceLocation, x, y, pos.getWidth(), pos.getHeight(), pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), textureWidth, textureHeight);
     }
 
-    public static void drawLayer(Screen gui, PoseStack poseStack, int x, int y, TexturePos pos)
+    public static void drawLayerBySize(GuiGraphics guiGraphics, int x, int y, ResourceLocation resourceLocation, TexturePos pos)
     {
-        gui.blit(poseStack, x, y, pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight());
+        drawLayerBySize(guiGraphics, x, y, resourceLocation, pos, pos.getWidth(), pos.getHeight());
     }
 
-    public static void drawLayerBySize(PoseStack poseStack, int x, int y, TexturePos pos, int textureWidth, int textureHeight)
-    {
-        GuiComponent.blit(poseStack, x, y, pos.getWidth(), pos.getHeight(), pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), textureWidth, textureHeight);
-    }
-
-    public static void drawLayerBySize(PoseStack poseStack, int x, int y, TexturePos pos)
-    {
-        drawLayerBySize(poseStack, x, y, pos, pos.getWidth(), pos.getHeight());
-    }
-
-    public static void renderIconButton(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, int z, ResourceLocation texture, IconButton button, TexturePos normalPos, TexturePos hoveredPos, TexturePos pressedPos)
+    public static void renderIconButton(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY, int z, ResourceLocation texture, IconButton button, TexturePos normalPos, TexturePos hoveredPos, TexturePos pressedPos)
     {
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, texture);
         if (button.isPressed())
         {
-            GuiHelper.drawLayer(poseStack, button.getX(), button.getY(), pressedPos);
+            GuiHelper.drawLayer(guiGraphics, button.getX(), button.getY(), texture, pressedPos);
             RenderSystem.disableBlend();
             return;
         }
         else if (button.isHoveredOrFocused())
         {
-            GuiHelper.drawLayer(poseStack, button.getX(), button.getY(), hoveredPos);
+            GuiHelper.drawLayer(guiGraphics, button.getX(), button.getY(), texture, hoveredPos);
             RenderSystem.disableBlend();
             return;
         }
 
-        GuiHelper.drawLayer(poseStack, button.getX(), button.getY(), normalPos);
+        GuiHelper.drawLayer(guiGraphics, button.getX(), button.getY(), texture, normalPos);
         RenderSystem.disableBlend();
 
-        button.render(poseStack, mouseX, mouseY, partialTicks);
+        button.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    public static void renderButton(PoseStack poseStack, float partialTicks, int mouseX, int mouseY, int z, ResourceLocation texture, Button button, TexturePos normalPos, TexturePos hoveredPos)
+    public static void renderButton(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY, ResourceLocation texture, Button button, TexturePos normalPos, TexturePos hoveredPos)
     {
         RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, texture);
 
         if (button.isHoveredOrFocused())
         {
-            GuiHelper.drawLayer(poseStack, button.getX(), button.getY(), hoveredPos);
+            GuiHelper.drawLayer(guiGraphics, button.getX(), button.getY(), texture, hoveredPos);
         }
         else
         {
-            GuiHelper.drawLayer(poseStack, button.getX(), button.getY(), normalPos);
+            GuiHelper.drawLayer(guiGraphics, button.getX(), button.getY(), texture, normalPos);
         }
         RenderSystem.disableBlend();
 
-        button.render(poseStack, mouseX, mouseY, partialTicks);
+        button.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     public static void drawTank(Screen gui, TexturePos pos, FluidStack fluid, int fluidHeight)
@@ -152,26 +137,26 @@ public final class GuiHelper
     public static void drawSpecialString(Font font, String text, float x, float y, int color, boolean shadow, boolean transparent, int colorBackground, int packedLight)
     {
         MultiBufferSource.BufferSource iRenderTypeBuffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        font.drawInBatch(text, x, y, color, shadow, Transformation.identity().getMatrix(), iRenderTypeBuffer, transparent, colorBackground, packedLight);
+        font.drawInBatch(text, x, y, color, shadow, Transformation.identity().getMatrix(), iRenderTypeBuffer, transparent ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, colorBackground, packedLight);
         iRenderTypeBuffer.endBatch();
     }
 
-    public static void drawTooltip(Screen gui, PoseStack matrix, int mouseX, int mouseY, int x, int y, int weight, int height, List<Component> list)
+    public static void drawTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y, int weight, int height, List<Component> list)
     {
         if (x <= mouseX && mouseX <= x + weight && y <= mouseY && mouseY <= y + height)
         {
-            gui.renderTooltip(matrix, list, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, list, Optional.empty(), mouseX, mouseY);
         }
     }
 
-    public static void drawFluidTooltip(Screen gui, PoseStack matrix, int mouseX, int mouseY, int x, int y, int width, int height, Component name, int amount)
+    public static void drawFluidTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y, int width, int height, Component name, int amount)
     {
         if (amount != 0)
         {
             List<Component> list = Lists.newArrayList(name);
             DecimalFormat df = new DecimalFormat("#,###");
             list.add(Component.literal(df.format(amount) + " mB").withStyle(ChatFormatting.GRAY));
-            drawTooltip(gui, matrix, mouseX, mouseY, x, y, width, height, list);
+            drawTooltip(guiGraphics, mouseX, mouseY, x, y, width, height, list);
         }
     }
 

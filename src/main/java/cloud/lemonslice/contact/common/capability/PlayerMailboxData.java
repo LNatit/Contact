@@ -96,7 +96,7 @@ public class PlayerMailboxData
                     ServerPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(uuid);
                     if (player != null)
                     {
-                        SimpleNetworkHandler.CHANNEL.sendTo(new ActionMessage(0), player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                        SimpleNetworkHandler.CHANNEL.sendTo(new ActionMessage(0), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                     }
                     return true;
                 }

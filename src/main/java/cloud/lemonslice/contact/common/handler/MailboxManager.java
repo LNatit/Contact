@@ -80,7 +80,7 @@ public final class MailboxManager
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        event.getEntity().getLevel().getCapability(WORLD_MAILBOX_DATA).ifPresent(data ->
+        event.getEntity().level().getCapability(WORLD_MAILBOX_DATA).ifPresent(data ->
         {
             data.getData().nameToUUID.put(event.getEntity().getName().getString(), event.getEntity().getUUID());
             if (data.getData().uuidToContents.get(event.getEntity().getUUID()) == null)
@@ -91,7 +91,7 @@ public final class MailboxManager
             {
                 if (!data.getData().isMailboxEmpty(event.getEntity().getUUID()))
                 {
-                    SimpleNetworkHandler.CHANNEL.sendTo(new ActionMessage(0), ((ServerPlayer) event.getEntity()).connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+                    SimpleNetworkHandler.CHANNEL.sendTo(new ActionMessage(0), ((ServerPlayer) event.getEntity()).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
                 }
                 updateState(event.getEntity().getUUID(), data.getData());
             }

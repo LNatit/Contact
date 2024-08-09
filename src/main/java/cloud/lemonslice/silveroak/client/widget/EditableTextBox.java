@@ -5,7 +5,10 @@ import cloud.lemonslice.silveroak.network.TextBoxEditMessage;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.SharedConstants;
@@ -13,7 +16,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -359,18 +362,18 @@ public class EditableTextBox extends AbstractWidget
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTicks)
     {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         Page page = this.getPage();
 
         for (Line line : page.lines)
         {
-            this.font.draw(poseStack, line.lineTextComponent, (float) line.x, (float) line.y, color);
+            gui.drawString(this.font, line.lineTextComponent, line.x, line.y, color, false);
         }
 
         this.renderSelection(page.selection);
-        this.renderCursor(poseStack, page.point, page.isInsert);
+        this.renderCursor(gui, page.point, page.isInsert);
     }
 
     private void renderSelection(Rect2i[] selection)
@@ -379,7 +382,6 @@ public class EditableTextBox extends AbstractWidget
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionShader);
         RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-        RenderSystem.disableTexture();
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -398,21 +400,20 @@ public class EditableTextBox extends AbstractWidget
 
         tesselator.end();
         RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     }
 
-    private void renderCursor(PoseStack poseStack, Point point, boolean isInsert)
+    private void renderCursor(GuiGraphics gui, Point point, boolean isInsert)
     {
         if (this.updateCount / 6 % 2 == 0 && height != 0)
         {
             point = this.getPointPosInScreen(point);
             if (!isInsert)
             {
-                GuiComponent.fill(poseStack, point.x, point.y - 1, point.x + 1, point.y + 9, color);
+                gui.fill(point.x, point.y - 1, point.x + 1, point.y + 9, color);
             }
             else
             {
-                this.font.draw(poseStack, "_", (float) point.x, (float) point.y, color);
+                gui.drawString(this.font, "_", point.x, point.y, color, false);
             }
         }
 

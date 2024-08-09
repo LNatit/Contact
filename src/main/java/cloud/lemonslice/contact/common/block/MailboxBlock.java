@@ -39,7 +39,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -68,7 +67,7 @@ public class MailboxBlock extends NormalHorizontalBlock implements EntityBlock
 
     public MailboxBlock(DyeColor boxColor, DyeColor flagColor)
     {
-        super(BlockBehaviour.Properties.of(Material.STONE, boxColor).noOcclusion().sound(SoundType.STONE).strength(1.5F, 6.0F));
+        super(BlockBehaviour.Properties.of().mapColor(boxColor).noOcclusion().sound(SoundType.STONE).strength(1.5F, 6.0F));
         this.boxColor = boxColor;
         this.flagColor = flagColor;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HALF, DoubleBlockHalf.LOWER).setValue(OPEN, false));
@@ -309,12 +308,13 @@ public class MailboxBlock extends NormalHorizontalBlock implements EntityBlock
         return MAILBOX_BLOCK_ENTITY.get() == blockEntityType ? (BlockEntityTicker<A>) entityTicker : null;
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
-    {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? Lists.newArrayList(new ItemStack(this)) : Collections.emptyList();
-    }
+    // TODO DataGen block drops
+//    @Override
+//    @SuppressWarnings("deprecation")
+//    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
+//    {
+//        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? Lists.newArrayList(new ItemStack(this)) : Collections.emptyList();
+//    }
 
     @Nullable
     @Override
