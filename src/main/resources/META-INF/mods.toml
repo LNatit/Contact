@@ -24,9 +24,9 @@ mandatory = true
 versionRange = "[1.19.2,1.20)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.contact]]
-modId = "silveroakoutpost"
-mandatory = true
-versionRange = "[2.0.0-Beta,)"
-ordering = "NONE"
-side = "BOTH"
+#[[dependencies.contact]]
+#modId = "silveroakoutpost"
+#mandatory = true
+#versionRange = "[2.0.0-Beta,)"
+#ordering = "NONE"
+#side = "BOTH"
