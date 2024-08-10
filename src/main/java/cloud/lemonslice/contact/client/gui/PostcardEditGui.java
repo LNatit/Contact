@@ -101,7 +101,7 @@ public class PostcardEditGui extends Screen
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         RenderSystem.setShaderTexture(0, style.getCardTexture());
-        blit(poseStack, (this.width - style.cardWidth) / 2, this.height / 2 - style.cardHeight * 2 / 3, style.cardWidth, style.cardHeight, 0, 0, style.cardWidth, style.cardHeight, style.cardWidth, style.cardHeight);
+        guiGraphics.blit(style.getCardTexture(), (this.width - style.cardWidth) / 2, this.height / 2 - style.cardHeight * 2 / 3, style.cardWidth, style.cardHeight, 0, 0, style.cardWidth, style.cardHeight, style.cardWidth, style.cardHeight);
 
         textBox.render(guiGraphics, mouseX, mouseY, partialTicks);
 

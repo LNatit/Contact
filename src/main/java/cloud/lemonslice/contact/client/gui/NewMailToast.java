@@ -21,7 +21,7 @@ public class NewMailToast implements Toast
         PoseStack matrixStack = guiGraphics.pose();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        toastComponent.blit(matrixStack, 0, 0, 0, 0, this.width(), this.height());
+        guiGraphics.blit(TEXTURE, 0, 0, 0, 0, this.width(), this.height());
 
         List<FormattedCharSequence> list = toastComponent.getMinecraft().font.split(Component.translatable("info.contact.new_mail.desc"), 125);
         int i = 16776960;
@@ -47,14 +47,14 @@ public class NewMailToast implements Toast
 
                 for (FormattedCharSequence formattedCharSequence : list)
                 {
-                    guiGraphics.drawString(toastComponent.getMinecraft().font, formattedCharSequence, 30.0F, (float) l, 16777215 | i1, true);
+                    guiGraphics.drawString(toastComponent.getMinecraft().font, formattedCharSequence, 30.0F, (float) l, 16777215 | i1, false);
 //                    toastComponent.getMinecraft().font.draw(matrixStack, formattedCharSequence, 30.0F, (float) l, 16777215 | i1);
                     l += 9;
                 }
             }
         }
 
-        toastComponent.getMinecraft().getItemRenderer().renderAndDecorateFakeItem(new ItemStack(ItemRegistry.MAIL.get()), 8, 8);
+        guiGraphics.renderItem(new ItemStack(ItemRegistry.MAIL.get()), 8, 8);
         return ticks >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 }

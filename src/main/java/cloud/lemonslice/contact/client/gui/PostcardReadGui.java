@@ -5,7 +5,6 @@ import cloud.lemonslice.silveroak.client.widget.ReadOnlyTextBox;
 import cloud.lemonslice.silveroak.helper.ColorHelper;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -83,9 +82,9 @@ public class PostcardReadGui extends Screen
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, style.getCardTexture());
 
-        blit(matrixStack, (this.width - style.cardWidth) / 2, (this.height / 2 - style.cardHeight * 2 / 3),
-             style.cardWidth, style.cardHeight, 0, 0, style.cardWidth, style.cardHeight, style.cardWidth,
-             style.cardHeight
+        guiGraphics.blit(style.getCardTexture(), (this.width - style.cardWidth) / 2, (this.height / 2 - style.cardHeight * 2 / 3),
+                         style.cardWidth, style.cardHeight, 0, 0, style.cardWidth, style.cardHeight, style.cardWidth,
+                         style.cardHeight
         );
 
         RenderSystem.enableBlend();
@@ -96,10 +95,10 @@ public class PostcardReadGui extends Screen
         );
 
         RenderSystem.setShaderTexture(0, style.getPostmarkTexture());
-        blit(matrixStack, (this.width - style.cardWidth) / 2 + style.postmarkPosX,
-             (this.height / 2 - style.cardHeight * 2 / 3) + style.postmarkPosY, style.postmarkWidth,
-             style.postmarkHeight, 0, 0, style.postmarkWidth, style.postmarkHeight, style.postmarkWidth,
-             style.postmarkHeight
+        guiGraphics.blit(style.getCardTexture(), (this.width - style.cardWidth) / 2 + style.postmarkPosX,
+                         (this.height / 2 - style.cardHeight * 2 / 3) + style.postmarkPosY, style.postmarkWidth,
+                         style.postmarkHeight, 0, 0, style.postmarkWidth, style.postmarkHeight, style.postmarkWidth,
+                         style.postmarkHeight
         );
         RenderSystem.disableBlend();
 

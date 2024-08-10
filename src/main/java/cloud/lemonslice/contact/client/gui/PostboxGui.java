@@ -8,7 +8,6 @@ import cloud.lemonslice.silveroak.client.widget.IconButton;
 import cloud.lemonslice.silveroak.helper.GuiHelper;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -142,13 +141,13 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
-        this.font.draw(poseStack, Component.translatable("info.contact.postbox.addressee"), 40, 14, 0xE6E6E6);
+        guiGraphics.drawString(this.font, Component.translatable("info.contact.postbox.addressee"), 40, 14, 0xE6E6E6, false);
         switch (menu.status)
         {
             case 0:
             {
                 MutableComponent text = Component.translatable("info.contact.postbox.need_mail");
-                renderTipsSentOrFull(guiGraphics.pose(), text);
+                renderTipsSentOrFull(guiGraphics, text);
                 return;
             }
             case 2:
@@ -159,26 +158,26 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
                 int sec = menu.time % 1200 / 20;
                 if (width > 38)
                 {
-                    this.font.draw(poseStack, text, 141 - width / 2, 10, 0x1A1A1A);
+                    guiGraphics.drawString(this.font, text, 141 - width / 2, 10, 0x1A1A1A, false);
                     if (menu.time == 0)
                     {
-                        this.font.draw(poseStack, Component.translatable("info.contact.postbox.instant"), 141 - width / 2, 22, 0x1A1A1A);
+                        guiGraphics.drawString(this.font, Component.translatable("info.contact.postbox.instant"), 141 - width / 2, 22, 0x1A1A1A, false);
                     }
                     else
                     {
-                        this.font.draw(poseStack, Component.translatable("info.contact.postbox.time", min, sec), 141 - width / 2, 22, 0x1A1A1A);
+                        guiGraphics.drawString(this.font, Component.translatable("info.contact.postbox.time", min, sec), 141 - width / 2, 22, 0x1A1A1A, false);
                     }
                 }
                 else
                 {
-                    this.font.draw(poseStack, text, 122, 10, 0x1A1A1A);
+                    guiGraphics.drawString(this.font, text, 122, 10, 0x1A1A1A, false);
                     if (menu.time == 0)
                     {
-                        this.font.draw(poseStack, Component.translatable("info.contact.postbox.instant"), 122, 22, 0x1A1A1A);
+                        guiGraphics.drawString(this.font, Component.translatable("info.contact.postbox.instant"), 122, 22, 0x1A1A1A, false);
                     }
                     else
                     {
-                        this.font.draw(poseStack, Component.translatable("info.contact.postbox.time", min, sec), 122, 22, 0x1A1A1A);
+                        guiGraphics.drawString(this.font, Component.translatable("info.contact.postbox.time", min, sec), 122, 22, 0x1A1A1A, false);
                     }
                 }
                 return;
@@ -189,29 +188,29 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
                 int width = this.font.width(text.getString());
                 if (width > 38)
                 {
-                    this.font.draw(poseStack, text, 141 - width / 2, 16, 0x1A1A1A);
+                    guiGraphics.drawString(this.font, text, 141 - width / 2, 16, 0x1A1A1A, false);
                 }
                 else
                 {
-                    this.font.draw(poseStack, text, 122, 16, 0x1A1A1A);
+                    guiGraphics.drawString(this.font, text, 122, 16, 0x1A1A1A, false);
                 }
                 return;
             }
             case 4:
             {
                 MutableComponent text = Component.translatable("info.contact.postbox.full_mail");
-                renderTipsSentOrFull(poseStack, text);
+                renderTipsSentOrFull(guiGraphics, text);
                 return;
             }
             case 5:
             {
                 MutableComponent text = Component.translatable("info.contact.postbox.success");
-                renderTipsSentOrFull(poseStack, text);
+                renderTipsSentOrFull(guiGraphics, text);
             }
         }
     }
 
-    private void renderTipsSentOrFull(PoseStack poseStack, MutableComponent text)
+    private void renderTipsSentOrFull(GuiGraphics guiGraphics, MutableComponent text)
     {
         int width = this.font.width(text.getString());
         if (width > 38)
@@ -219,12 +218,12 @@ public class PostboxGui extends AbstractContainerScreen<PostboxContainer>
             List<FormattedCharSequence> list = this.font.split(text, 50);
             for (int i = 0; i < list.size(); i++)
             {
-                this.font.draw(poseStack, list.get(i), 118, 22 - list.size() * 6 + i * 12, 0x1A1A1A);
+                guiGraphics.drawString(this.font, list.get(i), 118, 22 - list.size() * 6 + i * 12, 0x1A1A1A, false);
             }
         }
         else
         {
-            this.font.draw(poseStack, text, 122, 16, 0x1A1A1A);
+            guiGraphics.drawString(this.font, text, 122, 16, 0x1A1A1A, false);
         }
     }
 
